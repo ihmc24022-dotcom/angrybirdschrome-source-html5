@@ -1,15 +1,4 @@
 <!DOCTYPE html>
-
-
-
-
-
-
-
-
-
-
-
 <html>
   <head>
     <title>Angry Birds Chrome</title>
@@ -187,43 +176,9 @@
           </div>
 
             </td>
-            </td>
             </tr>
           </table>
 
-      
-      
-      
-        
-        <iframe id='appcacheInstaller' style="display: none;"></iframe>
-        <script type="text/javascript">
-          var addIframe = false;
-          if (window.chrome && window.chrome.app && window.chrome.app.isInstalled) {
-            addIframe = true;
-          } else {
-            if (window.applicationCache && window.applicationCache.status == window.applicationCache.IDLE) {
-              
-              var date = new Date();
-              date.setTime(date.getTime() + 60 * 1000);
-              document.cookie = "uninstall=1; expires=" + date.toGMTString() + "; path=/manifest";
-              addIframe = true;
-            }
-          }
-          if (addIframe) {
-            document.getElementById('appcacheInstaller').src = 'http://chrome.angrybirds.com/AppCacheInstaller.html';
-          }
-        </script>
-
-        
-          
-          <iframe style='display: none;' src='http://chrome.angrybirds.com/AppCacheUninstaller.jsp?path=/angrybirds/appcache.nocache.manifest'></iframe>
-          <iframe style='display: none;' src='http://chrome.angrybirds.com/AppCacheUninstaller.jsp?path=/angrybirds111/appcache.nocache.manifest'></iframe>
-          <iframe style='display: none;' src='http://chrome.angrybirds.com/AppCacheUninstaller.jsp?path=/angrybirds112/appcache.nocache.manifest'></iframe>
-        
-
-      
-
-    
     <noscript>
       <div class="info-noscript">
         Your web browser must have JavaScript enabled
@@ -234,11 +189,11 @@
     <script type="text/javascript">
       if (window.self != window.top && window.top.location.host.match("^[a-zA-Z]*\.angrybirds\.com") == null) {
         setInterval(function() {
-                         var content = document.getElementById('content');
-                         content.parentNode.style.display = 'none';
-                         var playn = document.getElementById('playn-root');
-                         if (playn != null) playn.parentNode.removeChild(playn);
-                    }, 500);
+                     var content = document.getElementById('content');
+                     content.parentNode.style.display = 'none';
+                     var playn = document.getElementById('playn-root');
+                     if (playn != null) playn.parentNode.removeChild(playn);
+                }, 500);
       }
     </script>
 
