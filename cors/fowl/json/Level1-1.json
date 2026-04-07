@@ -20,35 +20,26 @@
     }
   ],
   "counts": {
-    "birds": 4,
-    "blocks": 12
+    "birds": 3,
+    "blocks": 7
   },
   "id": "pack1/Level1.lua",
-  "scoreEagle": 100000,
-  "scoreGold": 50000,
-  "scoreSilver": 40000,
+  "scoreEagle": 17000,
+  "scoreGold": 32000,
+  "scoreSilver": 30000,
   "theme": "BACKGROUND_BLUE_GRASS",
   "world": {
     "bird_1": { "angle": 0, "id": "BIRD_RED", "x": 0, "y": -0.974 },
-    "bird_2": { "angle": 0, "id": "BIRD_BIG_RED", "x": 12, "y": -1.02 },
-    "bird_3": { "angle": 0, "id": "BIRD_BOMB", "x": 15, "y": -1.02 },
-    "bird_4": { "angle": 0, "id": "BIRD_BLACK", "x": 9, "y": -1.02 },
+    "bird_2": { "angle": 0, "id": "BIRD_RED", "x": 15.394, "y": -1.02 },
+    "bird_3": { "angle": 0, "id": "BIRD_RED", "x": 12.167, "y": -1.019 },
     
-    "block_1": { "angle": 0, "id": "PIG_BASIC_MEDIUM", "x": 55, "y": -15.0 },
-    "block_2": { "angle": 0, "id": "TNT", "x": 55, "y": -10.0 },
+    "block_1": { "angle": 0, "id": "PIG_BASIC_SMALL", "x": 55.0, "y": -10.0 },
+    "block_2": { "angle": 0, "id": "STONE_BLOCK_2X2", "x": 50.0, "y": -5.0 },
+    "block_3": { "angle": 90, "id": "ICE_BLOCK_4X1", "x": 55.0, "y": -5.0 },
+    "block_4": { "angle": 90, "id": "WOOD_BLOCK_8X1", "x": 60.0, "y": -5.0 },
     
-    "block_3": { "angle": 0, "id": "STONE_BLOCK_4X4", "x": 45, "y": -5.0 },
-    "block_4": { "angle": 0, "id": "STONE_BLOCK_4X4", "x": 45, "y": -10.0 },
-    
-    "block_5": { "angle": 0, "id": "ICE_BLOCK_4X4", "x": 50, "y": -5.0 },
-    "block_6": { "angle": 0, "id": "ICE_BLOCK_4X4", "x": 50, "y": -10.0 },
-    
-    "block_7": { "angle": 0, "id": "WOOD_BLOCK_4X4", "x": 60, "y": -5.0 },
-    "block_8": { "angle": 0, "id": "WOOD_BLOCK_4X4", "x": 60, "y": -10.0 },
-    
-    "block_9": { "angle": 0, "id": "MISC_ESTRADE_9X3", "x": 45, "y": -1.3 },
-    "block_10": { "angle": 0, "id": "MISC_ESTRADE_9X3", "x": 55, "y": -1.3 },
-    "block_11": { "angle": 0, "id": "MISC_ESTRADE_9X3", "x": 65, "y": -1.3 },
-    "block_12": { "angle": 0, "id": "PIG_KING", "x": 65, "y": -10.0 }
+    "block_5": { "angle": 0, "id": "MISC_ESTRADE_9X3", "x": 50.0, "y": -1.3 },
+    "block_6": { "angle": 0, "id": "MISC_ESTRADE_9X3", "x": 55.0, "y": -1.3 },
+    "block_7": { "angle": 0, "id": "MISC_ESTRADE_9X3", "x": 60.0, "y": -1.3 }
   }
 }
