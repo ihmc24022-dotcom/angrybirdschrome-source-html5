@@ -2,6 +2,7 @@
 	"episodes" : [
 	  {
 		"name" : "Building Mode",
+		"classicEpisode": true,
 		"levelsPerPage" : [1],
 		"rowsPerPage" : [1],
 		"pageIndexes" : ["build"],
