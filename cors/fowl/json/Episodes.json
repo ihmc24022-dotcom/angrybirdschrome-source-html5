@@ -1,6 +1,23 @@
 {
 	"episodes" : [
 	  {
+		"name" : "Building Mode",
+		"levelsPerPage" : [1],
+		"rowsPerPage" : [1],
+		"pageIndexes" : ["build"],
+		"pageBackgroundColors" : [{"r" : 50, "g" : 50, "b" : 50}],
+		"menuImage" : "EPISODE_POACHEDEGGS",
+		"featherBoxImage": "POPUP_ME_EP1",
+		"leftCorner" : "LEVESELECTION_LEFT_CORNER_1", 
+		"rightCorner" : "LEVESELECTION_RIGHT_CORNER_1",
+		"levelBoxBackgrounds" : [
+			"LEVESELECTION_LEVEL_BG_0"
+		],
+		"levelRequirements" : [
+			["build-1","none",""]
+		]
+	  },
+	  {
 		"name" : "Trick or Treat",
 		"levelsPerPage" : [15, 15, 15],
 		"rowsPerPage" : [3, 3, 3],
@@ -20,11 +37,11 @@
 		"levelRequirements" : [
 			["h1-1","none",""]
 		]
-	  },
+	  },
 
-	  {
-	  	"name" : "christmas",
-	  	"levelsPerPage" : [25, 3],
+	  {
+	  	"name" : "christmas",
+	  	"levelsPerPage" : [25, 3],
 		"rowsPerPage" : [4, 1],
 		"pageIndexes" : ["christmas", "christmasSpecial"],
 		"levelSelectionIndexes" : ["1", "2"],
@@ -78,7 +95,7 @@
          }
       },
 
-	  {
+	  {
 		"name" : "Easter Eggs",
 		"levelsPerPage" : [18, 3],
 		"rowsPerPage" : [3, 1],
@@ -100,9 +117,9 @@
 			["easterSpecial-2","selfUnlocked",""],
 			["easterSpecial-3","selfUnlocked",""]
 		]
-	  },
+	  },
 
-	  {
+	  {
 		"name" : "Moon Festival",
 		"levelsPerPage" : [15, 15],
 		"rowsPerPage" : [3, 3],
@@ -121,9 +138,9 @@
 		"levelRequirements" : [
 			["m1-1","none", ""]
 		]
-	  },
+	  },
 
-	  {
+	  {
 		"name" : "Cherry Blossom",
 		"levelsPerPage" : [15],
 		"rowsPerPage" : [3],
@@ -141,9 +158,9 @@
 		"levelRequirements" : [
 			["cherryBlossom-1","none",""]
 		]
-	  },
+	  },
 
-	  {
+	  {
 		"name" : "Summer Pignic",
 		"levelsPerPage" : [29],
 		"rowsPerPage" : [4],
@@ -162,10 +179,10 @@
 			["summer_pignic-1","none",""],
 			["summer_pignic-29","selfUnlocked",""]
 		]
-	  },
+	  },
 
-	  {
-	  	"name" : "1",
+	  {
+	  	"name" : "1",
 		"levelsPerPage" : [21, 21, 21],
 		"rowsPerPage" : [3, 3, 3],
 		"pageIndexes" : ["1", "2", "3"],
@@ -191,9 +208,9 @@
 			["1-1","none",""]
 		],
 		"classicEpisode": true
-	  },
-	  {
-	  	"name" : "2",
+	  },
+	  {
+	  	"name" : "2",
 		"levelsPerPage" : [21, 21, 21],
 		"rowsPerPage" : [3, 3, 3],
 		"pageIndexes" : ["4", "5"],
@@ -216,10 +233,10 @@
 			["4-1","none",""]
 		],
 		"classicEpisode": true
-	  },
-	  {
-	  	"name" : "3",
-	  	"levelsPerPage" : [15, 15, 15],
+	  },
+	  {
+	  	"name" : "3",
+	  	"levelsPerPage" : [15, 15, 15],
 		"rowsPerPage" : [3, 3, 3],
 		"pageIndexes" : ["6", "7", "8"],
 		"pageBackgroundColors" : [{"r" : 82, "g" : 103, "b" : 43}, {"r" : 21, "g" : 31, "b" : 63}, {"r" : 190, "g" : 219, "b" : 229}],
@@ -243,7 +260,7 @@
 			["6-1","none",""]
 		],
 		"classicEpisode": true
-	  },
+	  },
     {
       "name" : "The Big Setup",
       "levelsPerPage" : [15, 15, 15],
@@ -303,8 +320,8 @@
 	  "classicEpisode": true
 	},
 	{
-	  	"name" : "chrome",
-	  	"levelsPerPage" : [21],
+	 	"name" : "chrome",
+	 	"levelsPerPage" : [21],
 		"rowsPerPage" : [3],
 		"pageIndexes" : ["chrome"],
 		"pageBackgroundColors" : [{"r" : 41, "g" : 118, "b" : 142}],
