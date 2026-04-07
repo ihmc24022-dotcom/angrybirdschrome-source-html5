@@ -1,0 +1,15 @@
+{
+  "camera" : [
+    {"bottom" : -33.9, "id" : "Slingshot", "left" : -72, "right" : -23.7, "top" : -60.1, "x" : -47.85, "y" : -47},
+    {"bottom" : -13, "id" : "Castle", "left" : 57.913, "right" : 101.407, "top" : -50, "x" : 79.66, "y" : -31.5}
+  ],
+  "birds" : [
+    "BIRD_RED",
+    "BIRD_RED"
+  ],
+  "castle" : [
+    {"angle" : 0, "id" : "PIG_BASIC_SMALL", "x" : 80, "y" : -15}
+  ],
+  "scoreConstraints" : [10000, 20000],
+  "theme" : "BACKGROUND_BLUE_GRASS"
+}
