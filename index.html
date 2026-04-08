@@ -2,65 +2,71 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Angry Birds Mod - Fixed Path</title>
-    <link rel="stylesheet" href="cors/fowl/css/angry_birds_chrome.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>Angry Birds - Fixed Edition</title>
+    
+    <base href="cors/fowl/">
+
+    <link rel="stylesheet" href="css/angry_birds_chrome.css">
+    
     <script>
         (function() {
+            // 状态显示条
             var statusBox = null;
             function logStatus(msg, color) {
                 if(!statusBox) {
                     statusBox = document.createElement('div');
-                    statusBox.style = "position:fixed;top:0;left:0;width:100%;z-index:9999;font-size:12px;padding:5px;text-align:center;font-weight:bold;color:white;font-family:sans-serif;";
+                    statusBox.style = "position:fixed;top:0;left:0;width:100%;z-index:9999;font-size:12px;padding:5px;text-align:center;font-weight:bold;color:white;font-family:sans-serif;background:rgba(0,0,0,0.7);";
                     document.body.appendChild(statusBox);
                 }
                 statusBox.innerText = msg;
-                statusBox.style.background = color || "red";
+                statusBox.style.color = color || "white";
             }
 
-            // 核心修复：劫持所有请求并重定向到 cors/fowl/data/
+            // 2. 劫持 XMLHttpRequest 来修复 JSON 加载路径
             var oldOpen = XMLHttpRequest.prototype.open;
             XMLHttpRequest.prototype.open = function(method, url) {
                 var lowUrl = url.toLowerCase();
                 var timestamp = "?v=" + Date.now();
                 var newUrl = url;
 
-                // 1. 拦截 Episodes
+                // 统一指向 data 文件夹
                 if (lowUrl.indexOf("episode") > -1) {
-                    newUrl = "cors/fowl/data/episodes.json" + timestamp;
-                    logStatus("📡 正在读取目录: episodes.json", "blue");
+                    newUrl = "data/episodes.json" + timestamp;
+                    logStatus("📡 正在读取目录...", "#3498db");
                 } 
-                // 2. 拦截 Build-1 (这是物理引擎的核心)
                 else if (lowUrl.indexOf("build-1") > -1) {
-                    newUrl = "cors/fowl/data/build-1.json" + timestamp;
-                    logStatus("⚙️ 正在载入物理引擎: build-1.json", "green");
+                    newUrl = "data/build-1.json" + timestamp;
+                    logStatus("⚙️ 正在加载物理引擎...", "#2ecc71");
                 }
-                // 3. 拦截 Level Pack
                 else if (lowUrl.indexOf("level_pack") > -1 || lowUrl.indexOf("level_pak") > -1) {
-                    newUrl = "cors/fowl/data/build.json" + timestamp;
-                    logStatus("📦 正在载入关卡包...", "orange");
-                }
-                // 4. 处理图片和声音请求（如果它们也被请求了）
-                else if (lowUrl.indexOf("images/") > -1 && lowUrl.indexOf("cors/fowl/") === -1) {
-                    newUrl = "cors/fowl/" + url;
+                    newUrl = "data/build.json" + timestamp;
+                    logStatus("📦 正在载入关卡包...", "#e67e22");
                 }
 
-                console.log("Original URL:", url, " -> Redirected to:", newUrl);
                 oldOpen.apply(this, [method, newUrl, arguments[2]]);
             };
 
-            // 强力劫持内存中的变量
+            // 3. 内存变量劫持（确保关卡列表正常显示）
             setInterval(function() {
                 var g = window.$wnd || window;
                 if (g.episodes && g.episodes[0]) {
                     g.episodes[0].k = 'Building Mode';
                     g.episodes[0].pageIndexes = ['build'];
                 }
-            }, 100);
+            }, 500);
+
+            window.onerror = function(msg, url, line) {
+                logStatus("Error: " + msg + " (Line: " + line + ")", "red");
+            };
         })();
     </script>
-    <script src="cors/fowl/fowl.nocache.js"></script>
+
+    <script src="fowl.nocache.js"></script>
 </head>
-<body style="background: #333; margin: 0; overflow: hidden;">
-    <div id='gameDiv'><div id='playn-root'></div></div>
+<body style="background: #000; margin: 0; overflow: hidden; height: 100vh; width: 100vw;">
+    <div id='gameDiv' style="width: 100%; height: 100%;">
+        <div id='playn-root'></div>
+    </div>
 </body>
 </html>
