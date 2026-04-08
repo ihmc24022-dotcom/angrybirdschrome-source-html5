@@ -1,48 +1,56 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Angry Birds Mod - V22 Final</title>
+    <title>Angry Birds Mod - V23 Debug</title>
     <link rel="stylesheet" href="css/angry_birds_chrome.css">
     <script>
         (function() {
+            var statusBox = null;
+            function logStatus(msg, color) {
+                if(!statusBox) {
+                    statusBox = document.createElement('div');
+                    statusBox.style = "position:fixed;top:0;width:100%;z-index:9999;font-size:10px;padding:2px;text-align:center;font-weight:bold;";
+                    document.body.appendChild(statusBox);
+                }
+                statusBox.innerText = msg;
+                statusBox.style.background = color || "red";
+            }
+
             var oldOpen = XMLHttpRequest.prototype.open;
             XMLHttpRequest.prototype.open = function(method, url) {
                 var lowUrl = url.toLowerCase();
                 var timestamp = "?v=" + Date.now();
+                var newUrl = url;
 
-                // 只要包含 "episode" 或 "episodes"
                 if (lowUrl.indexOf("episode") > -1) {
-                    url = "data/episodes.json" + timestamp;
+                    newUrl = "data/episodes.json" + timestamp;
+                    logStatus("Loading Episodes...", "blue");
                 }
-                // 拦截 level_pack，就算你拼错成 pakes 也能识别
-                else if (lowUrl.indexOf("level_pak") > -1 || lowUrl.indexOf("level_pack") > -1) {
-                    url = "data/level_packs/build.json" + timestamp;
+                else if (lowUrl.indexOf("level_pack") > -1 || lowUrl.indexOf("level_pak") > -1) {
+                    newUrl = "data/level_packs/build.json" + timestamp;
+                    logStatus("Loading Level Pack...", "orange");
                 }
-                // 拦截具体关卡 build-1
                 else if (lowUrl.indexOf("build-1") > -1) {
-                    url = "data/levels/build-1.json" + timestamp;
+                    newUrl = "data/levels/build-1.json" + timestamp;
+                    logStatus("Loading Level Content...", "green");
                 }
                 
-                console.log("Redirected to: " + url);
-                oldOpen.apply(this, arguments);
+                oldOpen.apply(this, [method, newUrl, arguments[2]]);
             };
 
-            // 内存劫持，确保 UI 刷新
+            // 强力劫持内存中的变量
             setInterval(function() {
                 var g = window.$wnd || window;
                 if (g.episodes && g.episodes[0]) {
                     g.episodes[0].k = 'Building Mode';
                     g.episodes[0].pageIndexes = ['build'];
                 }
-            }, 500);
+            }, 100);
         })();
     </script>
     <script src="fowl/fowl.nocache.js"></script>
 </head>
 <body>
-    <div style="position:fixed;top:0;width:100%;background:orange;color:black;text-align:center;z-index:9999;font-size:12px;font-weight:bold;">
-        V22 - PATH SPELLING FIX ACTIVE
-    </div>
     <div id='gameDiv'><div id='playn-root'></div></div>
 </body>
 </html>
