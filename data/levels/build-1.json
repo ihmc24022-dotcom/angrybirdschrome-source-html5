@@ -1,0 +1,11 @@
+{
+  "camera": {"x": 0, "y": 0, "zoom": 1},
+  "birds": ["BIRD_RED", "BIRD_RED", "BIRD_RED"],
+  "world": {
+    "blocks": [
+      {"id": "TERRAIN_GROUND_1", "x": 0, "y": 450, "rotation": 0},
+      {"id": "BLOCK_WOOD_RECTANGLE_1", "x": 800, "y": 400, "rotation": 0},
+      {"id": "PIG_BASIC", "x": 800, "y": 350, "rotation": 0}
+    ]
+  }
+}
