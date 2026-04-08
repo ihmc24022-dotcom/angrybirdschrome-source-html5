@@ -3,70 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <title>Angry Birds - Fixed Edition</title>
-    
-    <base href="cors/fowl/">
-
-    <link rel="stylesheet" href="css/angry_birds_chrome.css">
-    
+    <title>Angry Birds - Fix V3</title>
+    <link rel="stylesheet" href="cors/fowl/css/angry_birds_chrome.css">
     <script>
         (function() {
-            // 状态显示条
             var statusBox = null;
             function logStatus(msg, color) {
                 if(!statusBox) {
                     statusBox = document.createElement('div');
-                    statusBox.style = "position:fixed;top:0;left:0;width:100%;z-index:9999;font-size:12px;padding:5px;text-align:center;font-weight:bold;color:white;font-family:sans-serif;background:rgba(0,0,0,0.7);";
+                    statusBox.style = "position:fixed;top:0;left:0;width:100%;z-index:9999;font-size:12px;padding:5px;text-align:center;font-weight:bold;color:white;font-family:sans-serif;background:rgba(0,0,0,0.8);";
                     document.body.appendChild(statusBox);
                 }
                 statusBox.innerText = msg;
                 statusBox.style.color = color || "white";
             }
 
-            // 2. 劫持 XMLHttpRequest 来修复 JSON 加载路径
+            // 核心修复：强制劫持所有文件请求
             var oldOpen = XMLHttpRequest.prototype.open;
             XMLHttpRequest.prototype.open = function(method, url) {
-                var lowUrl = url.toLowerCase();
-                var timestamp = "?v=" + Date.now();
                 var newUrl = url;
-
-                // 统一指向 data 文件夹
-                if (lowUrl.indexOf("episode") > -1) {
-                    newUrl = "data/episodes.json" + timestamp;
-                    logStatus("📡 正在读取目录...", "#3498db");
-                } 
-                else if (lowUrl.indexOf("build-1") > -1) {
-                    newUrl = "data/build-1.json" + timestamp;
-                    logStatus("⚙️ 正在加载物理引擎...", "#2ecc71");
-                }
-                else if (lowUrl.indexOf("level_pack") > -1 || lowUrl.indexOf("level_pak") > -1) {
-                    newUrl = "data/build.json" + timestamp;
-                    logStatus("📦 正在载入关卡包...", "#e67e22");
+                var lowUrl = url.toLowerCase();
+                
+                // 所有的请求都强制加上 cors/fowl/ 前缀
+                if (lowUrl.indexOf("cors/fowl/") === -1) {
+                    // 如果请求里已经包含了 data/ 或 images/，就补全路径
+                    if (lowUrl.indexOf("data/") === 0 || lowUrl.indexOf("images/") === 0 || lowUrl.indexOf("audio/") === 0) {
+                        newUrl = "cors/fowl/" + url;
+                    }
                 }
 
+                // 特殊处理 build-1.json (有些版本路径带 levels)
+                if (lowUrl.indexOf("build-1") > -1) {
+                    newUrl = "cors/fowl/data/build-1.json";
+                    logStatus("⚙️ 物理引擎就绪", "#2ecc71");
+                }
+
+                console.log("Redirect:", url, "->", newUrl);
                 oldOpen.apply(this, [method, newUrl, arguments[2]]);
             };
 
-            // 3. 内存变量劫持（确保关卡列表正常显示）
+            // 劫持图片加载
+            var nativeImage = window.Image;
+            window.Image = function() {
+                var img = new nativeImage();
+                var setter = img.__lookupSetter__("src");
+                Object.defineProperty(img, "src", {
+                    set: function(s) {
+                        var res = s;
+                        if (s.indexOf("cors/fowl/") === -1 && s.indexOf("http") === -1) {
+                            res = "cors/fowl/" + s;
+                        }
+                        this.setAttribute("src", res);
+                    }
+                });
+                return img;
+            };
+
             setInterval(function() {
                 var g = window.$wnd || window;
                 if (g.episodes && g.episodes[0]) {
                     g.episodes[0].k = 'Building Mode';
                     g.episodes[0].pageIndexes = ['build'];
                 }
-            }, 500);
-
-            window.onerror = function(msg, url, line) {
-                logStatus("Error: " + msg + " (Line: " + line + ")", "red");
-            };
+            }, 100);
         })();
     </script>
-
-    <script src="fowl.nocache.js"></script>
+    <script src="cors/fowl/fowl.nocache.js"></script>
 </head>
-<body style="background: #000; margin: 0; overflow: hidden; height: 100vh; width: 100vw;">
-    <div id='gameDiv' style="width: 100%; height: 100%;">
-        <div id='playn-root'></div>
-    </div>
+<body style="background: #000; margin: 0;">
+    <div id='gameDiv'><div id='playn-root'></div></div>
 </body>
 </html>
