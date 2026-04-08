@@ -1,40 +1,50 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Angry Birds Mod - V23 Debug</title>
-    <link rel="stylesheet" href="css/angry_birds_chrome.css">
+    <meta charset="UTF-8">
+    <title>Angry Birds Mod - Fixed Path</title>
+    <link rel="stylesheet" href="cors/fowl/css/angry_birds_chrome.css">
     <script>
         (function() {
             var statusBox = null;
             function logStatus(msg, color) {
                 if(!statusBox) {
                     statusBox = document.createElement('div');
-                    statusBox.style = "position:fixed;top:0;width:100%;z-index:9999;font-size:10px;padding:2px;text-align:center;font-weight:bold;";
+                    statusBox.style = "position:fixed;top:0;left:0;width:100%;z-index:9999;font-size:12px;padding:5px;text-align:center;font-weight:bold;color:white;font-family:sans-serif;";
                     document.body.appendChild(statusBox);
                 }
                 statusBox.innerText = msg;
                 statusBox.style.background = color || "red";
             }
 
+            // 核心修复：劫持所有请求并重定向到 cors/fowl/data/
             var oldOpen = XMLHttpRequest.prototype.open;
             XMLHttpRequest.prototype.open = function(method, url) {
                 var lowUrl = url.toLowerCase();
                 var timestamp = "?v=" + Date.now();
                 var newUrl = url;
 
+                // 1. 拦截 Episodes
                 if (lowUrl.indexOf("episode") > -1) {
-                    newUrl = "data/episodes.json" + timestamp;
-                    logStatus("Loading Episodes...", "blue");
-                }
-                else if (lowUrl.indexOf("level_pack") > -1 || lowUrl.indexOf("level_pak") > -1) {
-                    newUrl = "data/level_packs/build.json" + timestamp;
-                    logStatus("Loading Level Pack...", "orange");
-                }
+                    newUrl = "cors/fowl/data/episodes.json" + timestamp;
+                    logStatus("📡 正在读取目录: episodes.json", "blue");
+                } 
+                // 2. 拦截 Build-1 (这是物理引擎的核心)
                 else if (lowUrl.indexOf("build-1") > -1) {
-                    newUrl = "data/levels/build-1.json" + timestamp;
-                    logStatus("Loading Level Content...", "green");
+                    newUrl = "cors/fowl/data/build-1.json" + timestamp;
+                    logStatus("⚙️ 正在载入物理引擎: build-1.json", "green");
                 }
-                
+                // 3. 拦截 Level Pack
+                else if (lowUrl.indexOf("level_pack") > -1 || lowUrl.indexOf("level_pak") > -1) {
+                    newUrl = "cors/fowl/data/build.json" + timestamp;
+                    logStatus("📦 正在载入关卡包...", "orange");
+                }
+                // 4. 处理图片和声音请求（如果它们也被请求了）
+                else if (lowUrl.indexOf("images/") > -1 && lowUrl.indexOf("cors/fowl/") === -1) {
+                    newUrl = "cors/fowl/" + url;
+                }
+
+                console.log("Original URL:", url, " -> Redirected to:", newUrl);
                 oldOpen.apply(this, [method, newUrl, arguments[2]]);
             };
 
@@ -48,9 +58,9 @@
             }, 100);
         })();
     </script>
-    <script src="fowl/fowl.nocache.js"></script>
+    <script src="cors/fowl/fowl.nocache.js"></script>
 </head>
-<body>
+<body style="background: #333; margin: 0; overflow: hidden;">
     <div id='gameDiv'><div id='playn-root'></div></div>
 </body>
 </html>
