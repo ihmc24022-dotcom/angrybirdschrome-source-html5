@@ -1,39 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Angry Birds Mod - V19</title>
+    <title>Angry Birds Mod - V20</title>
     <link rel="stylesheet" href="css/angry_birds_chrome.css">
     <script>
         (function() {
-            // 1. 强制重定向：无论游戏找什么，都让它去读 data/episodes.json
             var oldOpen = XMLHttpRequest.prototype.open;
             XMLHttpRequest.prototype.open = function(method, url) {
                 var lowUrl = url.toLowerCase();
+                // 拦截 episodes.json
                 if (lowUrl.indexOf("episode") > -1) {
-                    // 强制指向 data 文件夹下的文件，并加随机数
                     url = "data/episodes.json?v=" + Date.now();
+                }
+                // 拦截关卡加载请求，确保它指向 data/levels/
+                if (lowUrl.indexOf("build-1") > -1) {
+                    url = "data/levels/build-1.json?v=" + Date.now();
                 }
                 oldOpen.apply(this, arguments);
             };
 
-            // 2. 字符串工厂拦截 (ZDc 函数)
-            var checkZDc = setInterval(function() {
-                if (window.ZDc) {
-                    var original = window.ZDc;
-                    window.ZDc = function(v) {
-                        if (v === 'Poached Eggs') return 'Building Mode';
-                        return original(v);
-                    };
-                    clearInterval(checkZDc);
-                }
-            }, 100);
-
-            // 3. 内存变量强制覆盖
+            // 内存强制覆盖逻辑保持不变
             setInterval(function() {
                 var g = window.$wnd || window;
                 if (g.episodes && g.episodes[0]) {
                     g.episodes[0].k = 'Building Mode';
-                    g.episodes[0].name = 'Building Mode';
                     g.episodes[0].pageIndexes = ['build'];
                 }
             }, 500);
@@ -42,8 +32,8 @@
     <script src="fowl/fowl.nocache.js"></script>
 </head>
 <body>
-    <div style="position:fixed;top:0;width:100%;background:white;color:black;text-align:center;z-index:9999;font-size:12px;font-weight:bold;border-bottom:2px solid red;">
-        V19 - DATA FOLDER FIX ACTIVE
+    <div style="position:fixed;top:0;width:100%;background:red;color:white;text-align:center;z-index:9999;font-size:12px;font-weight:bold;">
+        V20 - LEVEL LOADING FIX
     </div>
     <div id='gameDiv'><div id='playn-root'></div></div>
 </body>
