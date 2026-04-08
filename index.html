@@ -1,56 +1,37 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Angry Birds Mod - V10</title>
-    <link rel="stylesheet" href="css/angry_birds_chrome.css" type="text/css">
-    <script type="text/javascript">
-      (function() {
-        // 1. 核心逻辑：给 Object 原型链加一个“陷阱”
-        // 这样无论哪个变量名叫 e，只要它尝试设置 .k 属性，就会被我们拦截
-        var targetValue = "Poached Eggs";
-        var newValue = "Building Mode";
+    <title>Angry Birds Mod - Case Fix</title>
+    <link rel="stylesheet" href="css/angry_birds_chrome.css">
+    <script>
+      // 1. 自动纠正大小写与路径
+      var oldOpen = XMLHttpRequest.prototype.open;
+      XMLHttpRequest.prototype.open = function(method, url) {
+        var normalizedUrl = url.toLowerCase(); // 全部转为小写对比
+        
+        // 只要请求中包含 episodes.json (不管它是大写还是小写)
+        if (normalizedUrl.indexOf("episodes.json") > -1) {
+          // 强制指向根目录下的 episodes.json，并加上时间戳防止缓存
+          url = "episodes.json?v=" + Date.now();
+          console.log("拦截成功：已纠正路径与大小写并指向根目录文件");
+        }
+        oldOpen.apply(this, arguments);
+      };
 
-        Object.defineProperty(Object.prototype, 'k', {
-          get: function() { return this._k; },
-          set: function(val) {
-            if (val === targetValue) {
-              console.log("拦截到 .k 赋值: Poached Eggs -> Building Mode");
-              this._k = newValue;
-            } else {
-              this._k = val;
-            }
-          },
-          configurable: true
-        });
-
-        // 2. 针对 pageIndexes 的相同拦截 (防止加载旧关卡)
-        Object.defineProperty(Object.prototype, 'pageIndexes', {
-          get: function() { return this._pi; },
-          set: function(val) {
-            if (Array.isArray(val) && val[0] === "poached_eggs") {
-              this._pi = ["build"];
-            } else {
-              this._pi = val;
-            }
-          },
-          configurable: true
-        });
-
-        // 3. 传统的 Episodes.json 拦截
-        var oldOpen = XMLHttpRequest.prototype.open;
-        XMLHttpRequest.prototype.open = function(method, url) {
-          if (url.indexOf("Episodes.json") > -1) {
-            url = "data/Episodes.json?v=" + new Date().getTime(); 
-          }
-          oldOpen.apply(this, arguments);
-        };
-      })();
+      // 2. 内存名称纠正 (针对 e.k)
+      setInterval(function() {
+        var g = window.$wnd || window;
+        if (g.episodes && g.episodes[0]) {
+          g.episodes[0].k = 'Building Mode'; 
+          g.episodes[0].pageIndexes = ['build'];
+        }
+      }, 1000);
     </script>
-    <script type="text/javascript" src="fowl/fowl.nocache.js"></script>
+    <script src="fowl/fowl.nocache.js"></script>
   </head>
   <body>
-    <div style="position:fixed;top:0;width:100%;background:orange;color:white;text-align:center;z-index:9999;font-size:12px;font-weight:bold;">
-      V10.0 PROTOTYPE TRAP ACTIVE
+    <div style="position:fixed;top:0;width:100%;background:deepskyblue;color:white;text-align:center;z-index:9999;font-size:12px;font-weight:bold;">
+      V15 - CASE INSENSITIVE REDIRECT ACTIVE
     </div>
     <div id='gameDiv'><div id='playn-root'></div></div>
   </body>
