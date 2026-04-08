@@ -1,23 +1,21 @@
-{
-	"episodes" : [
-	  {
-		"name" : "Building Mode",
-		"classicEpisode": true,
-		"levelsPerPage" : [1],
-		"rowsPerPage" : [1],
-		"pageIndexes" : ["build"],
-		"pageBackgroundColors" : [{"r" : 50, "g" : 50, "b" : 50}],
-		"menuImage" : "EPISODE_POACHEDEGGS",
-		"featherBoxImage": "POPUP_ME_EP1",
-		"leftCorner" : "LEVESELECTION_LEFT_CORNER_1", 
-		"rightCorner" : "LEVESELECTION_RIGHT_CORNER_1",
-		"levelBoxBackgrounds" : [
-			"LEVESELECTION_LEVEL_BG_0"
-		],
-		"levelRequirements" : [
-			["build-1","none",""]
-		]
-	  },
+[
+  {
+    "name" : "Building Mode",
+    "classicEpisode": false,
+    "levelsPerPage" : [1],
+    "rowsPerPage" : [1],
+    "pageIndexes" : ["build"],
+    "pageBackgroundImages" : ["images/Menu/chapter_selection/LevelSelection_TrickOrTreat.png"],
+    "pageBackgroundColors" : [{"r" : 41, "g" : 118, "b" : 142}],
+    "menuImage" : "EPISODE_TRICKORTREAT",
+    "featherBoxImage": "POPUP_ME_EP1",
+    "leftCorner" : "LS_THEME_1_LEFT",
+    "rightCorner" : "LS_THEME_12_RIGHT",
+    "levelBoxBackgrounds" : ["LEVESELECTION_LEVEL_BG_TRICKORTREAT"],
+    "levelRequirements" : [
+        ["build-1","none",""]
+    ]
+  },
 	  {
 		"name" : "Trick or Treat",
 		"levelsPerPage" : [15, 15, 15],
