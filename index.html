@@ -1,38 +1,50 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Angry Birds Mod - Case Fix</title>
+<head>
+    <title>Angry Birds Mod - V19</title>
     <link rel="stylesheet" href="css/angry_birds_chrome.css">
     <script>
-      // 1. 自动纠正大小写与路径
-      var oldOpen = XMLHttpRequest.prototype.open;
-      XMLHttpRequest.prototype.open = function(method, url) {
-        var normalizedUrl = url.toLowerCase(); // 全部转为小写对比
-        
-        // 只要请求中包含 episodes.json (不管它是大写还是小写)
-        if (normalizedUrl.indexOf("episodes.json") > -1) {
-          // 强制指向根目录下的 episodes.json，并加上时间戳防止缓存
-          url = "episodes.json?v=" + Date.now();
-          console.log("拦截成功：已纠正路径与大小写并指向根目录文件");
-        }
-        oldOpen.apply(this, arguments);
-      };
+        (function() {
+            // 1. 强制重定向：无论游戏找什么，都让它去读 data/episodes.json
+            var oldOpen = XMLHttpRequest.prototype.open;
+            XMLHttpRequest.prototype.open = function(method, url) {
+                var lowUrl = url.toLowerCase();
+                if (lowUrl.indexOf("episode") > -1) {
+                    // 强制指向 data 文件夹下的文件，并加随机数
+                    url = "data/episodes.json?v=" + Date.now();
+                }
+                oldOpen.apply(this, arguments);
+            };
 
-      // 2. 内存名称纠正 (针对 e.k)
-      setInterval(function() {
-        var g = window.$wnd || window;
-        if (g.episodes && g.episodes[0]) {
-          g.episodes[0].k = 'Building Mode'; 
-          g.episodes[0].pageIndexes = ['build'];
-        }
-      }, 1000);
+            // 2. 字符串工厂拦截 (ZDc 函数)
+            var checkZDc = setInterval(function() {
+                if (window.ZDc) {
+                    var original = window.ZDc;
+                    window.ZDc = function(v) {
+                        if (v === 'Poached Eggs') return 'Building Mode';
+                        return original(v);
+                    };
+                    clearInterval(checkZDc);
+                }
+            }, 100);
+
+            // 3. 内存变量强制覆盖
+            setInterval(function() {
+                var g = window.$wnd || window;
+                if (g.episodes && g.episodes[0]) {
+                    g.episodes[0].k = 'Building Mode';
+                    g.episodes[0].name = 'Building Mode';
+                    g.episodes[0].pageIndexes = ['build'];
+                }
+            }, 500);
+        })();
     </script>
     <script src="fowl/fowl.nocache.js"></script>
-  </head>
-  <body>
-    <div style="position:fixed;top:0;width:100%;background:deepskyblue;color:white;text-align:center;z-index:9999;font-size:12px;font-weight:bold;">
-      V15 - CASE INSENSITIVE REDIRECT ACTIVE
+</head>
+<body>
+    <div style="position:fixed;top:0;width:100%;background:white;color:black;text-align:center;z-index:9999;font-size:12px;font-weight:bold;border-bottom:2px solid red;">
+        V19 - DATA FOLDER FIX ACTIVE
     </div>
     <div id='gameDiv'><div id='playn-root'></div></div>
-  </body>
+</body>
 </html>
