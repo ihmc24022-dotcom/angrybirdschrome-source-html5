@@ -1,55 +1,50 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Angry Birds Mod - Fixed</title>
+    <title>Angry Birds Mod - Lag Fix</title>
     <link rel="stylesheet" href="css/angry_birds_chrome.css" type="text/css">
     <script type="text/javascript">
       (function() {
-        // 核心逻辑：拦截并修改所有对象的 .k 属性
-        var myModName = "Building Mode";
-        
-        // 监视所有对象的赋值行为
-        var patcher = function() {
-          // 遍历全局所有可能的混淆对象
-          var root = window.$wnd || window;
-          
-          // 这是一个“暴力搜索器”，专门找带有 .k 属性且等于 Poached Eggs 的对象
-          function search(obj, depth) {
-            if (depth > 3 || !obj) return;
-            for (var key in obj) {
-              try {
-                var child = obj[key];
-                // 命中你发现的特征：.k === 'Poached Eggs'
-                if (child && child.k === 'Poached Eggs') {
-                  console.log("找到目标 e.k，正在重写...");
-                  child.k = myModName;
-                  // 同时尝试修改相关的关卡 ID，防止加载旧关卡
-                  if (child.pageIndexes) child.pageIndexes = ["build"];
-                }
-                if (typeof child === 'object') search(child, depth + 1);
-              } catch (e) {}
-            }
+        // 1. 拦截 GWT 内部最常用的字符串定义函数 ZDc
+        // 这是 GWT 2.4.0（你的版本）生成字符串的入口
+        var originalZDc = window.ZDc;
+        Object.defineProperty(window, 'ZDc', {
+          get: function() { return window._ZDc; },
+          set: function(fn) {
+            window._ZDc = function(val) {
+              // 只要游戏尝试创建 "Poached Eggs" 字符串，立刻替换
+              if (val === 'Poached Eggs') return "Building Mode";
+              return fn(val);
+            };
+          },
+          configurable: true
+        });
+
+        // 2. 针对 Episodes.json 的静态拦截
+        var oldOpen = XMLHttpRequest.prototype.open;
+        XMLHttpRequest.prototype.open = function(method, url) {
+          if (url.indexOf("Episodes.json") > -1) {
+            url = "data/Episodes.json?v=" + new Date().getTime(); 
           }
-          search(root, 0);
+          oldOpen.apply(this, arguments);
         };
 
-        // 每 50 毫秒扫描一次，确保在游戏渲染前改掉它
-        setInterval(patcher, 50);
-
-        // 双重保险：改写字符串定义函数
-        // 很多 GWT 内部会调用一个函数来返回字符串，我们拦截它
-        var oldZDc = window.ZDc; 
-        window.ZDc = function(val) {
-          if (val === 'Poached Eggs') return myModName;
-          return oldZDc ? oldZDc.apply(this, arguments) : val;
-        };
+        // 3. 极轻量级的补丁（只运行一次，不循环扫描）
+        window.addEventListener('load', function() {
+          setTimeout(function() {
+            var root = window.$wnd || window;
+            if (root.episodes && root.episodes[0]) {
+               if(root.episodes[0].k) root.episodes[0].k = "Building Mode";
+            }
+          }, 3000); // 游戏加载3秒后执行一次即可
+        });
       })();
     </script>
     <script type="text/javascript" src="fowl/fowl.nocache.js"></script>
   </head>
   <body>
-    <div style="position:fixed;top:0;width:100%;background:cyan;color:black;text-align:center;z-index:9999;font-size:12px;font-weight:bold;">
-      V8.0 PRECISION PATCH ACTIVE (e.k Found)
+    <div style="position:fixed;top:0;width:100%;background:lightblue;color:black;text-align:center;z-index:9999;font-size:12px;">
+      V9.0 LAG FIX ACTIVE
     </div>
     <div id='gameDiv'><div id='playn-root'></div></div>
   </body>
