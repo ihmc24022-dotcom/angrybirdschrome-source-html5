@@ -1,92 +1,63 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Angry Birds Chrome</title>
-    <meta name="Title" content="Angry Birds Chrome">
-    <meta name="description" content="Play Angry Birds online in HD with Google Chrome">
-    <meta name="keywords" content="angry birds, free angry birds, online game, play online, angry birds app, chrome, google chrome, web browser, HD, arcade game, online, play angry birds online, web, application, game, iphone, android, ipad, slingshot, catapult, explosions, golden egg, levels, pigs, birds, stars, high scores, chrome os, chrome web store, angry birds rovio, play angry birds on computer, apps for chrome, play angry birds free">
-    <link href='http://fonts.googleapis.com/css?family=Terminal+Dosis:800' rel='stylesheet' type='text/css'>
+    <title>Angry Birds Mod</title>
     <link rel="stylesheet" href="css/angry_birds_chrome.css" type="text/css">
     
     <script type="text/javascript">
       (function() {
-        // 1. 拦截文件请求
+        // 监控游戏关卡数据的加载
+        var hasInjected = false;
+        
+        var injectMod = function() {
+          if (hasInjected) return;
+
+          // 定义你的新关卡数据
+          var myData = [{
+            "name": "Building Mode",
+            "classicEpisode": true,
+            "levelsPerPage": [1],
+            "rowsPerPage": [1],
+            "pageIndexes": ["build"],
+            "menuImage": "EPISODE_POACHEDEGGS",
+            "levelRequirements": [["build-1", "none", ""]]
+          }];
+
+          // 尝试覆盖所有可能的变量名
+          // GWT 混淆后的变量通常挂在 $wnd 或 window 下
+          var root = window.$wnd || window;
+          
+          if (root.episodes) {
+            root.episodes = myData;
+            console.log("成功：已替换 episodes 变量");
+            hasInjected = true;
+          }
+        };
+
+        // 持续扫描，直到游戏启动
+        var timer = setInterval(function() {
+          injectMod();
+          if (hasInjected) clearInterval(timer);
+        }, 100);
+
+        // 拦截网络请求作为双重保险
         var oldOpen = XMLHttpRequest.prototype.open;
         XMLHttpRequest.prototype.open = function(method, url) {
           if (url.indexOf("Episodes.json") > -1) {
-            console.log("拦截成功：重定向关卡数据...");
-            url = "data/Episodes.json?v=" + new Date().getTime(); 
+            url = "data/Episodes.json?v=" + new Date().getTime();
           }
           oldOpen.apply(this, arguments);
         };
-
-        // 2. 强制内存注入（双重保险）
-        window.addEventListener('load', function() {
-          var checkData = setInterval(function() {
-            if (window.episodes || (window.game && window.game.episodes)) {
-              var myData = [{
-                "name": "Building Mode",
-                "classicEpisode": true,
-                "levelsPerPage": [1],
-                "rowsPerPage": [1],
-                "pageIndexes": ["build"],
-                "menuImage": "EPISODE_POACHEDEGGS",
-                "levelRequirements": [["build-1", "none", ""]]
-              }];
-              // 强行覆盖游戏内存变量
-              if (window.episodes) window.episodes = myData;
-              if (window.game && window.game.episodes) window.game.episodes = myData;
-              console.log("内存数据已注入！");
-              clearInterval(checkData);
-            }
-          }, 100);
-        });
       })();
     </script>
 
     <script type="text/javascript" src="fowl/fowl.nocache.js"></script>
-    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
-    <script type="text/javascript">
-      google.load('payments', '1.0', { 'packages': ['production_config'] });
-    </script>
   </head>
   <body>
-    <h1 style="position: absolute; top: 0; left: 0; z-index: 9999; color: black; font-size: 20px; background: #00FF00; padding: 5px;">
-        MOD STATUS: ACTIVE (v3.0)
-    </h1>
-
-    <div class="gamecont" id="content">
-      <div id='gameDiv' style="display: inline-block;">
-        <div id='playn-root'>
-          <div id="loading">
-            <img src="images/loading_image_bird.png" />
-          </div>
-        </div>
-      </div>
-      <div class='buttons'>
-        <div class='buttoncontainer'>
-          <a id='installButton' href='#' onclick="return false;"></a>
-          <a href="#" class="loginButton" id="login"></a>
-        </div>
-      </div>
+    <div style="position:fixed; top:0; width:100%; background:yellow; color:red; text-align:center; z-index:9999; font-weight:bold; font-size:14px;">
+      MOD STATUS: SCANNING FOR POACHED EGGS... (v5.0)
     </div>
 
-    <script type="text/javascript">
-        function getFlashVersion() {
-            try {
-                var version;
-                try {
-                    version = new ActiveXObject("ShockwaveFlash.ShockwaveFlash").GetVariable("$version");
-                } catch (e) {
-                    version = navigator.plugins["Shockwave Flash"].description;
-                }
-                return version.replace(/\D*(\d+).*/g, "$1");
-            } catch (e) { return -1; }
-        }
-        function haveAudioSupport() {
-            try { if (new AudioContext() || new webkitAudioContext()) return true; } catch (ignore) { }
-            return getFlashVersion() >= 9.0;
-        }
-    </script>
+    <div id='gameDiv'><div id='playn-root'></div></div>
   </body>
 </html>
