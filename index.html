@@ -1,26 +1,42 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Angry Birds Mod - Lag Fix</title>
+    <title>Angry Birds Mod - V10</title>
     <link rel="stylesheet" href="css/angry_birds_chrome.css" type="text/css">
     <script type="text/javascript">
       (function() {
-        // 1. 拦截 GWT 内部最常用的字符串定义函数 ZDc
-        // 这是 GWT 2.4.0（你的版本）生成字符串的入口
-        var originalZDc = window.ZDc;
-        Object.defineProperty(window, 'ZDc', {
-          get: function() { return window._ZDc; },
-          set: function(fn) {
-            window._ZDc = function(val) {
-              // 只要游戏尝试创建 "Poached Eggs" 字符串，立刻替换
-              if (val === 'Poached Eggs') return "Building Mode";
-              return fn(val);
-            };
+        // 1. 核心逻辑：给 Object 原型链加一个“陷阱”
+        // 这样无论哪个变量名叫 e，只要它尝试设置 .k 属性，就会被我们拦截
+        var targetValue = "Poached Eggs";
+        var newValue = "Building Mode";
+
+        Object.defineProperty(Object.prototype, 'k', {
+          get: function() { return this._k; },
+          set: function(val) {
+            if (val === targetValue) {
+              console.log("拦截到 .k 赋值: Poached Eggs -> Building Mode");
+              this._k = newValue;
+            } else {
+              this._k = val;
+            }
           },
           configurable: true
         });
 
-        // 2. 针对 Episodes.json 的静态拦截
+        // 2. 针对 pageIndexes 的相同拦截 (防止加载旧关卡)
+        Object.defineProperty(Object.prototype, 'pageIndexes', {
+          get: function() { return this._pi; },
+          set: function(val) {
+            if (Array.isArray(val) && val[0] === "poached_eggs") {
+              this._pi = ["build"];
+            } else {
+              this._pi = val;
+            }
+          },
+          configurable: true
+        });
+
+        // 3. 传统的 Episodes.json 拦截
         var oldOpen = XMLHttpRequest.prototype.open;
         XMLHttpRequest.prototype.open = function(method, url) {
           if (url.indexOf("Episodes.json") > -1) {
@@ -28,23 +44,13 @@
           }
           oldOpen.apply(this, arguments);
         };
-
-        // 3. 极轻量级的补丁（只运行一次，不循环扫描）
-        window.addEventListener('load', function() {
-          setTimeout(function() {
-            var root = window.$wnd || window;
-            if (root.episodes && root.episodes[0]) {
-               if(root.episodes[0].k) root.episodes[0].k = "Building Mode";
-            }
-          }, 3000); // 游戏加载3秒后执行一次即可
-        });
       })();
     </script>
     <script type="text/javascript" src="fowl/fowl.nocache.js"></script>
   </head>
   <body>
-    <div style="position:fixed;top:0;width:100%;background:lightblue;color:black;text-align:center;z-index:9999;font-size:12px;">
-      V9.0 LAG FIX ACTIVE
+    <div style="position:fixed;top:0;width:100%;background:orange;color:white;text-align:center;z-index:9999;font-size:12px;font-weight:bold;">
+      V10.0 PROTOTYPE TRAP ACTIVE
     </div>
     <div id='gameDiv'><div id='playn-root'></div></div>
   </body>
