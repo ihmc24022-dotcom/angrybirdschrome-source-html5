@@ -3,61 +3,45 @@
   <head>
     <title>Angry Birds Mod</title>
     <link rel="stylesheet" href="css/angry_birds_chrome.css" type="text/css">
-    
     <script type="text/javascript">
       (function() {
-        // 监控游戏关卡数据的加载
-        var hasInjected = false;
-        
-        var injectMod = function() {
-          if (hasInjected) return;
-
-          // 定义你的新关卡数据
-          var myData = [{
-            "name": "Building Mode",
-            "classicEpisode": true,
-            "levelsPerPage": [1],
-            "rowsPerPage": [1],
-            "pageIndexes": ["build"],
-            "menuImage": "EPISODE_POACHEDEGGS",
-            "levelRequirements": [["build-1", "none", ""]]
-          }];
-
-          // 尝试覆盖所有可能的变量名
-          // GWT 混淆后的变量通常挂在 $wnd 或 window 下
-          var root = window.$wnd || window;
-          
-          if (root.episodes) {
-            root.episodes = myData;
-            console.log("成功：已替换 episodes 变量");
-            hasInjected = true;
+        // 1. 深度拦截 JSON 解析（这是最有效的方法）
+        var oldJSONParse = JSON.parse;
+        JSON.parse = function(text) {
+          // 如果解析的内容里包含 Poached Eggs，说明抓到了关卡数据
+          if (text && text.indexOf("Poached Eggs") > -1) {
+            console.log("抓到关卡数据包，正在强制重写...");
+            // 构造我们的新关卡数据
+            var myMod = [{
+              "name": "Building Mode",
+              "classicEpisode": true,
+              "levelsPerPage": [1],
+              "rowsPerPage": [1],
+              "pageIndexes": ["build"],
+              "menuImage": "EPISODE_POACHEDEGGS",
+              "levelRequirements": [["build-1", "none", ""]]
+            }];
+            return myMod; // 强行返回修改后的数据
           }
+          return oldJSONParse.apply(this, arguments);
         };
 
-        // 持续扫描，直到游戏启动
-        var timer = setInterval(function() {
-          injectMod();
-          if (hasInjected) clearInterval(timer);
-        }, 100);
-
-        // 拦截网络请求作为双重保险
+        // 2. 网络拦截双保险
         var oldOpen = XMLHttpRequest.prototype.open;
         XMLHttpRequest.prototype.open = function(method, url) {
           if (url.indexOf("Episodes.json") > -1) {
-            url = "data/Episodes.json?v=" + new Date().getTime();
+            url = "data/Episodes.json?v=" + new Date().getTime(); 
           }
           oldOpen.apply(this, arguments);
         };
       })();
     </script>
-
     <script type="text/javascript" src="fowl/fowl.nocache.js"></script>
   </head>
   <body>
-    <div style="position:fixed; top:0; width:100%; background:yellow; color:red; text-align:center; z-index:9999; font-weight:bold; font-size:14px;">
-      MOD STATUS: SCANNING FOR POACHED EGGS... (v5.0)
+    <div style="position:fixed;top:0;width:100%;background:lime;color:black;text-align:center;z-index:9999;font-size:12px;font-weight:bold;">
+      V6.0 DATA INTERCEPTOR ACTIVE
     </div>
-
     <div id='gameDiv'><div id='playn-root'></div></div>
   </body>
 </html>
