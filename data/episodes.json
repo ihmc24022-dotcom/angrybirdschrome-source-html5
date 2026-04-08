@@ -11,7 +11,7 @@
     "leftCorner": "LEVESELECTION_LEFT_CORNER_1",
     "rightCorner": "LEVESELECTION_RIGHT_CORNER_1",
     "levelBoxBackgrounds": ["LEVESELECTION_LEVEL_BG_0"],
-    "levelRequirements": [["build-1", "none", ""]]
+    "levelRequirements": [["build", "none", ""]]
   },
   {
     "name": "Trick or Treat",
