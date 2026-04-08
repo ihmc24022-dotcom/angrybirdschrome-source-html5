@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Angry Birds Mod - V23 Debug</title>
+    <link rel="stylesheet" href="css/angry_birds_chrome.css">
+    <script>
+        (function() {
+            var statusBox = null;
+            function logStatus(msg, color) {
+                if(!statusBox) {
+                    statusBox = document.createElement('div');
+                    statusBox.style = "position:fixed;top:0;width:100%;z-index:9999;font-size:10px;padding:2px;text-align:center;font-weight:bold;";
+                    document.body.appendChild(statusBox);
+                }
+                statusBox.innerText = msg;
+                statusBox.style.background = color || "red";
+            }
+
+            var oldOpen = XMLHttpRequest.prototype.open;
+            XMLHttpRequest.prototype.open = function(method, url) {
+                var lowUrl = url.toLowerCase();
+                var timestamp = "?v=" + Date.now();
+                var newUrl = url;
+
+                if (lowUrl.indexOf("episode") > -1) {
+                    newUrl = "data/episodes.json" + timestamp;
+                    logStatus("Loading Episodes...", "blue");
+                }
+                else if (lowUrl.indexOf("level_pack") > -1 || lowUrl.indexOf("level_pak") > -1) {
+                    newUrl = "data/level_packs/build.json" + timestamp;
+                    logStatus("Loading Level Pack...", "orange");
+                }
+                else if (lowUrl.indexOf("build-1") > -1) {
+                    newUrl = "data/levels/build-1.json" + timestamp;
+                    logStatus("Loading Level Content...", "green");
+                }
+                
+                oldOpen.apply(this, [method, newUrl, arguments[2]]);
+            };
+
+            // 强力劫持内存中的变量
+            setInterval(function() {
+                var g = window.$wnd || window;
+                if (g.episodes && g.episodes[0]) {
+                    g.episodes[0].k = 'Building Mode';
+                    g.episodes[0].pageIndexes = ['build'];
+                }
+            }, 100);
+        })();
+    </script>
+    <script src="fowl/fowl.nocache.js"></script>
+</head>
+<body>
+    <div id='gameDiv'><div id='playn-root'></div></div>
+</body>
+</html>
