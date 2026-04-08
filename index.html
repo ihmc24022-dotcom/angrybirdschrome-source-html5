@@ -41,6 +41,20 @@
           ]
       });
     </script>
+    <script type="text/javascript">
+  // 强行拦截并修改游戏数据
+  (function() {
+    var oldOpen = XMLHttpRequest.prototype.open;
+    XMLHttpRequest.prototype.open = function(method, url) {
+      if (url.indexOf("Episodes.json") > -1) {
+        console.log("拦截到关卡请求，正在注入新关卡...");
+        // 这里强制让游戏去读你修改后的那个 data/Episodes.json
+        url = "data/Episodes.json?v=" + new Date().getTime(); 
+      }
+      oldOpen.apply(this, arguments);
+    };
+  })();
+</script>
   </head>
   <body>
     <h1 style="position: absolute; top: 0; left: 0; z-index: 9999; color: red; font-size: 50px; background: yellow;">TESTING UPDATE 2.0</h1>
