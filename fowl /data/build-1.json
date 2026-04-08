@@ -1,0 +1,16 @@
+{
+  "theme": "BACKGROUND_1",
+  "camera": [
+    { "bottom": 20, "id": "Slingshot", "left": -20, "right": 30, "top": -10, "x": 5, "y": 5 }
+  ],
+  "birds": ["BIRD_RED", "BIRD_RED", "BIRD_RED"],
+  "score_eagle": 30000,
+  "score_gold": 20000,
+  "score_silver": 10000,
+  "world": {
+    "blocks": [
+      { "id": "BLOCK_WOOD_1", "x": 15, "y": 0, "angle": 0 },
+      { "id": "PIG_BASIC_SMALL", "x": 15, "y": -1.5, "angle": 0 }
+    ]
+  }
+}
