@@ -1,25 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Angry Birds Mod - V20</title>
+    <title>Angry Birds Mod - V22 Final</title>
     <link rel="stylesheet" href="css/angry_birds_chrome.css">
     <script>
         (function() {
             var oldOpen = XMLHttpRequest.prototype.open;
             XMLHttpRequest.prototype.open = function(method, url) {
                 var lowUrl = url.toLowerCase();
-                // 拦截 episodes.json
+                var timestamp = "?v=" + Date.now();
+
+                // 只要包含 "episode" 或 "episodes"
                 if (lowUrl.indexOf("episode") > -1) {
-                    url = "data/episodes.json?v=" + Date.now();
+                    url = "data/episodes.json" + timestamp;
                 }
-                // 拦截关卡加载请求，确保它指向 data/levels/
-                if (lowUrl.indexOf("build-1") > -1) {
-                    url = "data/levels/build-1.json?v=" + Date.now();
+                // 拦截 level_pack，就算你拼错成 pakes 也能识别
+                else if (lowUrl.indexOf("level_pak") > -1 || lowUrl.indexOf("level_pack") > -1) {
+                    url = "data/level_packs/build.json" + timestamp;
                 }
+                // 拦截具体关卡 build-1
+                else if (lowUrl.indexOf("build-1") > -1) {
+                    url = "data/levels/build-1.json" + timestamp;
+                }
+                
+                console.log("Redirected to: " + url);
                 oldOpen.apply(this, arguments);
             };
 
-            // 内存强制覆盖逻辑保持不变
+            // 内存劫持，确保 UI 刷新
             setInterval(function() {
                 var g = window.$wnd || window;
                 if (g.episodes && g.episodes[0]) {
@@ -32,9 +40,10 @@
     <script src="fowl/fowl.nocache.js"></script>
 </head>
 <body>
-    <div style="position:fixed;top:0;width:100%;background:red;color:white;text-align:center;z-index:9999;font-size:12px;font-weight:bold;">
-        V20 - LEVEL LOADING FIX
+    <div style="position:fixed;top:0;width:100%;background:orange;color:black;text-align:center;z-index:9999;font-size:12px;font-weight:bold;">
+        V22 - PATH SPELLING FIX ACTIVE
     </div>
     <div id='gameDiv'><div id='playn-root'></div></div>
 </body>
 </html>
+
