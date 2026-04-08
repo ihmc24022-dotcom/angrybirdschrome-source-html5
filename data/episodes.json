@@ -160,21 +160,5 @@
     },
     "levelRequirements": [["12-1", "none", ""]],
     "classicEpisode": true
-  },
-  {
-    "name": "chrome",
-    "levelsPerPage": [21],
-    "rowsPerPage": [3],
-    "pageIndexes": ["chrome"],
-    "pageBackgroundColors": [{"r": 41, "g": 118, "b": 142}],
-    "menuImage": "EPISODE_CHROME",
-    "featherBoxImage": "POPUP_ME_CHROME",
-    "leftCorner": "LEVESELECTION_LEFT_CORNER_CHROME",
-    "rightCorner": "LEVESELECTION_RIGHT_CORNER_CHROME",
-    "chromeDimension": true,
-    "levelBoxBackgrounds": ["LEVESELECTION_LEVEL_CHROME_BG"],
-    "locked": true,
-    "levelRequirements": [["everyLevel", "selfUnlocked", ""]],
-    "classicEpisode": true
   }
 ]
